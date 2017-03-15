@@ -14,6 +14,7 @@
 # limitations under the License.
 
 require "fluent/plugin/output"
+require 'yaml'
 
 module Fluent::Plugin
   class LogentriesSSL < Fluent::Plugin::Output
@@ -35,7 +36,7 @@ module Fluent::Plugin
       begin
         @apptokens = YAML.load_file(@token_path)
       rescue Exception => e
-        raise Fluent::ConfigError, "Could not load logentries TCP tokens from #{@token_path}"
+        raise Fluent::ConfigError, "Could not load logentries TCP tokens from #{@token_path}: #{e.message}"
       end
     end
 
