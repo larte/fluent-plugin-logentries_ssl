@@ -13,15 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require "fluent/plugin/output"
+require 'fluent/plugin/output'
 require 'yaml'
 
 module Fluent::Plugin
   class LogentriesSSL < Fluent::Plugin::Output
-
     include Fluent::PluginHelper::Socket
 
-    Fluent::Plugin.register_output("logentries_ssl", self)
+    Fluent::Plugin.register_output('logentries_ssl', self)
 
     config_param :max_retries, :integer, default: 3
     config_param :le_host, :string, default: 'data.logentries.com'
@@ -30,16 +29,14 @@ module Fluent::Plugin
     config_param :json, :bool, default: true
     config_param :verify_fqdn, :bool, default: true
 
-
     def configure(conf)
       super
       begin
         @apptokens = YAML.load_file(@token_path)
-      rescue Exception => e
-        raise Fluent::ConfigError, "Could not load logentries TCP tokens from #{@token_path}: #{e.message}"
+      rescue StandardErrro => e
+        raise Fluent::ConfigError, "Could not load #{@token_path}: #{e.message}"
       end
     end
-
 
     def start
       super
@@ -47,29 +44,27 @@ module Fluent::Plugin
       @_client = create_client
     end
 
-
     # apparently needed for msgpack_each in :write fluent Issue-1342
     def formatted_to_msgpack_binary
       true
     end
 
-    def format(tag, time, record)
-      return [tag, record].to_msgpack
+    def format(tag, _time, record)
+      [tag, record].to_msgpack
     end
 
     def tag_token(tag)
       @apptokens.each do |name, token|
-        return token if (tag.casecmp(name) == 0)
+        return token if tag.casecmp(name).zero?
       end
-      return nil
+      nil
     end
 
-
     def write(chunk)
-      log.debug "Writing records to logentries"
+      log.debug 'Writing records to logentries'
       chunk.msgpack_each do |tag, record|
         token = tag_token(tag)
-        log.trace "Got token #{token} for tag ${tag}"
+        log.trace "Got token #{token} for tag #{tag}"
         log.trace "Record is #{record.inspect}"
         next unless token
         data = @json ? record.to_json : record
@@ -81,7 +76,6 @@ module Fluent::Plugin
     end
 
     private
-
 
     def create_client
       socket_create(:tls, @le_host, @le_port, verify_fqdn: @verify_fqdn)
@@ -104,18 +98,17 @@ module Fluent::Plugin
       tries = 0
       begin
         yield
-      rescue Errno::ECONNREFUSED, Errno::ECONNRESET,Errno::ECONNABORTED, Errno::ENETUNREACH, Errno::ETIMEDOUT, Errno::EPIPE  => e
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::ECONNABORTED,
+             Errno::ENETUNREACH, Errno::ETIMEDOUT, Errno::EPIPE => e
         if retry?(tries += 1)
-          log.warn "Clould not push to logentries, reset and retry"+
+          log.warn 'Clould not push to logentries, reset and retry'\
                    "in #{2**tries} seconds. #{e.message}"
-          sleep (2**tries) if retry?(tries+1)
-          @_client=nil
+          sleep(2**tries) if retry?(tries + 1)
+          close_client
           retry
         end
-        raise RuntimeError, "Could not push logs to Logentries"
+        raise 'Could not push logs to Logentries'
       end
     end
   end
-
-
 end
