@@ -38,11 +38,14 @@ gem install fluent-plugin-logentries_ssl
   </buffer>
 </match>
 
+````
 with tokens.yml
+
 ```
 tag-to-send: [logentries tcp token]
 other-tag: [other token]
 ```
+
 Event tag must match key in tokens file.
 
 other configuration keys:
