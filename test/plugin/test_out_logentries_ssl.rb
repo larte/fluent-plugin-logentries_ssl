@@ -1,6 +1,7 @@
 require "helper"
 require "fluent/plugin/out_logentries_ssl.rb"
 
+
 class LogentriesSSLOutTest < Test::Unit::TestCase
   setup do
     Fluent::Test.setup
@@ -86,9 +87,22 @@ class LogentriesSSLOutTest < Test::Unit::TestCase
     end
   end
 
+  test "sending too large events to LE" do
+    write_tokens
+    socket = stub_socket
+    message = {"hello" =>
+               "a"*(Fluent::Plugin::LogentriesSSL::MessageHelper::MAX_SIZE + 100)}
+    socket.expects(:write).with(anything).twice
+    d = create_driver(CONF)
+    time = event_time('2017-01-01 13:37:00 UTC')
+    d.run(default_tag: 'app') do
+      d.feed(time, message)
+    end
+  end
+
   private
 
   def create_driver(conf)
-    Fluent::Test::Driver::Output.new(Fluent::Plugin::LogentriesSSL).configure(conf)
+    Fluent::Test::Driver::Output.new(Fluent::Plugin::LogentriesSSL::Output).configure(conf)
   end
 end
