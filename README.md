@@ -58,6 +58,12 @@ other configuration keys:
 | *json* | Send record as json | true |
 | *verify_fqdn* | Verify FQDN for SSL | true |
 
+
+## Alternatives
+
+* [fluent-plugin-logentries](https://github.com/Woorank/fluent-plugin-logentries)
+* [fluent-plugin-simple-logentries](https://github.com/sowawa/fluent-plugin-simple-logentries)
+
 ## Copyright
 
 * Copyright(c) 2017- larte
