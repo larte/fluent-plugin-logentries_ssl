@@ -19,10 +19,28 @@ gem install fluent-plugin-logentries_ssl
 
 ## Configuration
 
+One of parameters *token\_path* or *default\_token* must be given. if token path is not defined, the Logentries token *default\_token* is used for all fluent events. When using *default\_token* with tokens from *token\_path*, it will be used as a fallback after trying to match a tag to a token in *token\_path*.
+
+| *parameter* | *description | *default value* |
+|---|---|---|
+| *token_path* | Path to YAML formatted file containing 'tag: logentries-token' pairs | nil |
+| *default_token* | A token string to be used either for all tags, or as fallback after token_path| nil |
+
+
 ```
 <match pattern>
   @type logentries_ssl
   token_path /path/to/tokens.yml
+</match>
+```
+
+or with *default\_token*:
+
+```
+<match pattern>
+  @type logentries_ssl
+  token_path /path/to/tokens.yml
+  default_token 'aaa-bbb-ccc'
 </match>
 ```
 
@@ -50,7 +68,7 @@ Event tag must match key in tokens file.
 
 other configuration keys:
 
-| *parameter* | *descrtiption | *default value* |
+| *parameter* | *description | *default value* |
 |---|---|---|
 | *le_host* | Logentries hostname to use  | data.logentries.com |
 | *le_port* | Logentries port to use | 443 |
