@@ -1,4 +1,5 @@
 # Logentries output plugin for [Fluentd](http://fluentd.org)
+[![Build Status](https://travis-ci.org/larte/fluent-plugin-logentries_ssl.png](https://travis-ci.org/larte/fluent-plugin-logentries_ssl.png)
 
 ## Overview
 
