@@ -123,6 +123,7 @@ module Fluent
             raise 'Could not push logs to Logentries'
           end
         end
+        # rubocop:enable Metrics/MethodLength
       end
     end
   end
