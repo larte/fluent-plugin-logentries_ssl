@@ -1,6 +1,6 @@
 # Logentries output plugin for [Fluentd](http://fluentd.org)
 [![Build Status](https://travis-ci.org/larte/fluent-plugin-logentries_ssl.png)](https://travis-ci.org/larte/fluent-plugin-logentries_ssl.png)
-[![Coverage Status](https://coveralls.io/repos/github/larte/fluent-plugin-logentries_ssl/badge.svg)](https://coveralls.io/github/larte/fluent-plugin-logentries_ssl)
+[![Coverage Status](https://coveralls.io/repos/github/larte/fluent-plugin-logentries_ssl/badge.svg?branch=master)](https://coveralls.io/github/larte/fluent-plugin-logentries_ssl?branch=master)
 
 ## Overview
 
